@@ -16,4 +16,4 @@ class User(db.Model, SerializerMixin):
     email = db.Column(db.String)
 
     def __repr__(self):
-        return
+        return f'Name: {self.fname} {self.lname} | Email: {self.email}'

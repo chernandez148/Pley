@@ -8,11 +8,10 @@ import os
 from flask import Flask, jsonify, make_response, request
 from flask_migrate import Migrate
 from flask_restful import Api, Resource
+from flask_cors import CORS
 
 # Local imports
 from config import app, db, api
-from models import User
-
 from models import db, User
 
 app = Flask(__name__)
