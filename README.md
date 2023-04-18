@@ -1,4 +1,10 @@
-# Phase 4 Full-Stack Application Project Template
+# Phase 4 Full-Stack Application Project - Pley
+
+## Wireframe and ERD
+
+Wireframe: https://www.figma.com/file/FusK6UZUiTAOd66zByilsm/Pley-Wireframe?node-id=0-1&t=N4NZ1Gokb3R4WVPt-0
+
+ERD: https://dbdiagram.io/d/643edb686b31947051ceef11
 
 ## Learning Goals
 
