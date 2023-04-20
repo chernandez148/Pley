@@ -1,9 +1,12 @@
+import { Route, Switch } from 'react-router-dom'
 import { IoIosSearch } from 'react-icons/io';
 import { Row, Col } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
+import SignUpSignIn from '../SignUp&SignIn/SignUpSignIn';
+
 import './NavBar.css'
 
 function NavBar() {
@@ -34,6 +37,12 @@ function NavBar() {
                     <Nav.Link className='border me-3 px-3 py-2' href="#action1">Sign In</Nav.Link>
                     <Nav.Link className='border me-3 px-3 py-2' href="#action2">Sign Up</Nav.Link>
                 </Col>
+
+                <Switch>
+                    <Route exact path="/SignUp&SignIn">
+                        <SignUpSignIn />
+                    </Route>
+                </Switch>
             </Row>
         </Container>
     );

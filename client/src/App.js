@@ -1,4 +1,3 @@
-import { Route, Switch } from 'react-router-dom'
 import NavBar from './components/NavBar/NavBar';
 import Hero from './components/Hero/Hero';
 // import Authentication from './components/Authentication/Authentication';
