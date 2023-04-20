@@ -1,37 +1,28 @@
-import { useState, useEffect } from 'react';
-import { Route, Switch, BrowserRouter } from 'react-router-dom';
-import Navigation from './components/Navigation/Navigation';
-import Authentication from './components/Authentication/Authentication';
+import NavBar from './components/NavBar/NavBar';
+import Hero from './components/Hero/Hero';
+// import Authentication from './components/Authentication/Authentication';
 import BusinessForm from './components/BuisnessForm/BusinessForm';
 import './App.css';
+import { useState, useEffect } from 'react';
 
 function App() {
-  const [businesses, setBusinesses] = useState([]);
-  const [user, setUser] = useState(null);
+  const [businesses, setBusinesses] = useState([])
+  console.log(businesses)
 
   useEffect(() => {
     fetch('/businesses')
       .then(resp => resp.json())
-      .then(setBusinesses);
-  }, []);
+      .then(setBusinesses)
+  }, [])
 
-  const addBusiness = (business) => setBusinesses(current => [...current, business]);
-
-  const updateUser = (user) => setUser(user);
+  const addBusiness = (business) => setBusinesses(current => [...current, business])
 
   return (
     <div className="App">
-      <BrowserRouter>
-        <Navigation />
-        <Switch>
-          <Route exact path="/Authentication">
-            <Authentication updateUser={updateUser} />
-          </Route>
-          <Route exact path="/business-form">
-            <BusinessForm addBusiness={addBusiness} />
-          </Route>
-        </Switch>
-      </BrowserRouter>
+      <NavBar />
+      <Hero />
+      {/* <Authentication /> */}
+      <BusinessForm addBusiness={addBusiness} />
     </div>
   );
 }
