@@ -10,7 +10,7 @@ from flask_restful import Api, Resource
 from werkzeug.exceptions import NotFound, Unauthorized
 
 # Local imports
-from models import db, User, Business
+from models import db, User, Business, Review
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
@@ -81,6 +81,29 @@ class BusinessByNames(Resource):
 
 
 api.add_resource(BusinessByNames, '/businesses/<string:name>')
+
+class ReviewsById(Resource):
+    def get(self, id):
+        review = Review.query.filter_by(id=id).first()
+        if not review:
+            raise NotFound
+        review_dict = review.to_dict()
+        response = make_response(
+            review_dict, 200)
+        return response
+    
+    def delete(self, id):
+        review = Review.query.filter_by(id=id).first()
+        if not review:
+            raise NotFound
+        elif 'user_id' != Review.user_id:
+            abort(401, "Unauthorized")
+        db.session.delete(review)
+        db.session.commit()
+
+        response = make_response('Review deleted', 204)      
+        return response  
+api.add_resource(ReviewsById, '/reviews/<int:id>')
 
 class SignUp(Resource):
     def post(self):

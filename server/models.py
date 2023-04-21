@@ -5,7 +5,7 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy import Enum
 from sqlalchemy.ext.hybrid import hybrid_property
 from bcrypt import hashpw, gensalt
-
+from flask_bcrypt import bcrypt
 
 db = SQLAlchemy()
 
