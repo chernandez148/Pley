@@ -96,7 +96,7 @@ class ReviewsById(Resource):
         review = Review.query.filter_by(id=id).first()
         if not review:
             raise NotFound
-        elif 'user_id' != Review.user_id:
+        elif session['user_id'] != Review.user_id:
             abort(401, "Unauthorized")
         db.session.delete(review)
         db.session.commit()
