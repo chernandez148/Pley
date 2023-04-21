@@ -66,13 +66,13 @@ class Businesses(Resource):
         return response
 api.add_resource(Businesses, '/businesses')
 
-class BusinessByNames(Resource):
+class BusinessById(Resource):
     
-    def get(self, name):
-        business = Business.query.filter(Business.business_name == name).first()
+    def get(self, id):
+        business = Business.query.filter_by(id=id).first()
         if not business:
             raise NotFound
-        business_dict = business.to_dict()
+        business_dict = business.to_dict(rules=('reviews', '-reviews.business', '-reviews.user'))
         response = make_response(
             business_dict,
             200
@@ -80,7 +80,7 @@ class BusinessByNames(Resource):
         return response
 
 
-api.add_resource(BusinessByNames, '/businesses/<string:name>')
+api.add_resource(BusinessById, '/businesses/<int:id>')
 
 class ReviewsById(Resource):
     def get(self, id):

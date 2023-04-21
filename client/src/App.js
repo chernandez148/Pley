@@ -4,6 +4,7 @@ import Hero from './components/Hero/Hero';
 import Navigation from './components/Navigation/Navigation';
 import Authentication from './components/Authentication/Authentication';
 import BusinessForm from './components/BuisnessForm/BusinessForm';
+import BusinessDetail from './components/BuisnessForm/BusinessDetail';
 import './App.css';
 
 function App() {
@@ -39,6 +40,9 @@ function App() {
           </Route>
           <Route exact path='/hero'>
             <Hero businesses={businesses}/>
+          </Route>
+          <Route path='/businesses/:id'>
+            <BusinessDetail />
           </Route>
         </Switch>
       </BrowserRouter>
