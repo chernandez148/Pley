@@ -1,20 +1,19 @@
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
-import AddReview from './AddReview'
+import AddReview from './AddReview';
+import Review from './Review';
 
 function BusinessDetail({ user, addReviews, users, deleteReviews }) {
     const [business, setBusiness] = useState({ reviews: [] });
     const [error, setError] = useState(null);
-    const [userReviewID, setUserReviewID] = useState()
+    const [userReviewID, setUserReviewID] = useState();
     const params = useParams();
 
-
     useEffect(() => {
-        getBusinessByID()
-        getReviewsByID()
+        getBusinessByID();
+        getReviewsByID();
     }, []);
-
 
     const getBusinessByID = () => {
         fetch(`/businesses/${params.id}`)
@@ -25,23 +24,13 @@ function BusinessDetail({ user, addReviews, users, deleteReviews }) {
                     res.json().then((data) => setError(data.error));
                 }
             });
-    }
+    };
 
     const getReviewsByID = () => {
         fetch(`/reviews/${params.id}`)
             .then(resp => resp.json())
-            .then(setUserReviewID)
-    }
-
-    const handleDelete = (userReviewID) => {
-        fetch(`/reviews/${params.id}`, {
-            method: 'DELETE',
-        })
-            .then(() => {
-                deleteReviews(userReviewID)
-
-            })
-    }
+            .then(setUserReviewID);
+    };
 
     return (
         <Container>
@@ -55,15 +44,8 @@ function BusinessDetail({ user, addReviews, users, deleteReviews }) {
                     <h5>{business.business_description}</h5>
                     <h6>
                         {business.reviews.map(review => (
-                            <div key={review.id}>
-                                Rating: {review.rating} <br />
-                                {review.review} <br />
-                                <Button variant="danger" onClick={handleDelete}>
-                                    Delete
-                                </Button>
-                            </div>
+                            <Review key={review.id} review={review} deleteReviews={deleteReviews} />
                         ))}
-
                     </h6>
                     {user ? (
                         <AddReview business_id={business.id} addReviews={addReviews} />
@@ -75,4 +57,5 @@ function BusinessDetail({ user, addReviews, users, deleteReviews }) {
         </Container>
     );
 }
-export default BusinessDetail
+
+export default BusinessDetail;
