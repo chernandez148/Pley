@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from app import app
 from models import db, User, Review, Business
+from faker import Faker
+fake = Faker()
 
 with app.app_context():
 
@@ -9,35 +11,43 @@ with app.app_context():
     Review.query.delete()
     Business.query.delete()
 
-    print('Creating user objects...')
-    user1 = User(fname='Black-Capped Chickadee', lname='Poecile Atricapillus', owner=False, email='email@email.com')
-    user2 = User(fname='Grackle', lname='Quiscalus Quiscula', owner=True, email='email@email.com')
-    user3 = User(fname='Common Starling', lname='Sturnus Vulgaris', owner=True, email='email@email.com')
-    user4 = User(fname='Mourning Dove', lname='Zenaida Macroura', owner=False, email='email@email.com')
+    # Generate fake users
+    for i in range(10):
+        user = User(
+            fname=fake.first_name(),
+            lname=fake.last_name(),
+            type='User' if i % 2 == 0 else 'Business',
+            email=fake.email(),
+            password=fake.password()
+        )
+        db.session.add(user)
 
-    print('Creating review objects...')
-    review1 = Review(rating=4, review='Great food and service!', user_id=3, business_id=10)
-    review2 = Review(rating=3, review='Decent food, but service was lacking.', user_id=4, business_id=5)
-    review3 = Review(rating=2, review='Disappointing experience.', user_id=1, business_id=6)
-    review4 = Review(id=4, rating=2, review='Disappointing experience.', user_id=1, business_id=6)
-    review5 = Review(rating=4, review='Great ambiance and menu, but service was a bit slow.', user_id=8, business_id=9)
+    # Generate fake businesses
+    for i in range(5):
+        business = Business(
+            business_name=fake.company(),
+            business_number=fake.phone_number(),
+            business_address=fake.address(),
+            business_city=fake.city(),
+            business_state=fake.state(),
+            business_zipcode=fake.zipcode(),
+            business_category=fake.random_element(elements=('Food & Dining', 'Automotive', 'Retailer', 'Computers & Electronics', 'Entertainment', 'Health & Medicine', 'Education', 'Home & Garden', 'Legal & Financial', 'Manufacturing, Wholesale, Distribution', 'Personal Care & Services', 'Real Estate', 'Travel & Transportation', 'Other')),
+            business_description=fake.text(),
+            business_owner=fake.random_int(min=1, max=10)
+        )
+        db.session.add(business)
 
-    print('Creating restaurant objects...')
-    business1 = Business(business_name='Pizza Palace', business_address='123 Main St', business_owner=2, business_category='Food & Dining')
-    business1.reviews.append(review1)
-    business2 = Business(business_name='Taco Town', business_address='456 Oak Ave', business_owner=2, business_category='Food & Dining')
-    business2.reviews.append(review4)
-    business3 = Business(business_name='Burger Barn', business_address='789 Elm St', business_owner=3, business_category='Food & Dining')
-    business3.reviews.append(review5)
-    business4 = Business(business_name='Sushi Spot', business_address='456 Pine St', business_owner=2, business_category='Food & Dining')
-    business4.reviews.append(review2)
-    business5 = Business(business_name='Pasta Place', business_address='234 Maple Ave', business_owner=3, business_category='Food & Dining')
-    business5.reviews.append(review3)
+    # Generate fake reviews
+    for i in range(20):
+        review = Review(
+            review=fake.text(),
+            rating=fake.random_int(min=1, max=5),
+            business_id=fake.random_int(min=1, max=5),
+            user_id=fake.random_int(min=1, max=10)
+        )
+        db.session.add(review)
 
-    print('Adding data objects to transaction...')
-    db.session.add_all([user1, user2, user3, user4, review1, review2, review3, review4, review5, business1, business2, business3, business4, business5])
-
-    print('Committing changes to database...')
+# Commit the changes to the database
     db.session.commit()
 
-    print('Done!')
+print('Done!')

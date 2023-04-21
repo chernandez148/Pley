@@ -4,6 +4,7 @@ import Hero from './components/Hero/Hero';
 import Navigation from './components/Navigation/Navigation';
 import Authentication from './components/Authentication/Authentication';
 import BusinessForm from './components/BuisnessForm/BusinessForm';
+import BusinessDetail from './components/BuisnessForm/BusinessDetail';
 import './App.css';
 
 function App() {
@@ -17,6 +18,8 @@ function App() {
       .then(resp => resp.json())
       .then(setBusinesses);
   }, []);
+
+  console.log(businesses)
 
   const hiddenOveflow = hideOverflow ? "overflow-y-hidden" : ""
 
@@ -36,7 +39,10 @@ function App() {
             <BusinessForm addBusiness={addBusiness} />
           </Route>
           <Route exact path='/hero'>
-            <Hero />
+            <Hero businesses={businesses}/>
+          </Route>
+          <Route path='/businesses/:id'>
+            <BusinessDetail />
           </Route>
         </Switch>
       </BrowserRouter>
