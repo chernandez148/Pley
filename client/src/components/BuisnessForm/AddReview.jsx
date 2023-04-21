@@ -1,9 +1,7 @@
-import { useHistory } from 'react-router-dom'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 
 function ReviewForm({ addReviews, business_id }) {
-    const history = useHistory()
 
     const formSchema = yup.object().shape({
         rating: yup.number().required("Please enter rating."),
@@ -34,6 +32,7 @@ function ReviewForm({ addReviews, business_id }) {
                 })
         }
     })
+
 
     return (
         <form className='text-start'>

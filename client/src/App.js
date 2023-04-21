@@ -15,6 +15,7 @@ function App() {
   console.log(user)
   console.log(businesses)
   console.log(reviews)
+  console.log(user)
 
   useEffect(() => {
     fetchUsers()
@@ -54,6 +55,9 @@ function App() {
         }
       })
   )
+
+  const deleteReview = (delete_review) => setReviews(reviews => reviews.filter((review) => review.id) !== delete_review.id)
+
   const addBusiness = (business) => setBusinesses(current => [...current, business]);
 
   const addReviews = (review) => setReviews(current => [...current, review])
@@ -75,7 +79,7 @@ function App() {
             <Hero businesses={businesses} />
           </Route>
           <Route path='/businesses/:id'>
-            <BusinessDetail users={users} addReviews={addReviews} user={user} />
+            <BusinessDetail deleteReview={deleteReview} reviews={reviews} users={users} addReviews={addReviews} user={user} />
           </Route>
         </Switch>
       </BrowserRouter>
