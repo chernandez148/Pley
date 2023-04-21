@@ -1,0 +1,48 @@
+.Navigation {
+    position: relative;
+    z-index: 2;
+    background-color: #fffffff7;
+}
+
+.search-form {
+    background-color: white;
+    padding: 0.5rem;
+    box-shadow: 0px 0px 5px 1px #a5a5a5;
+}
+
+.search-form input {
+    border: 0;
+}
+
+.search-form input:focus {
+    outline: none;
+}
+
+.search-form input:first-child {
+    border-right: 1px solid #b8b8b8 !important;
+}
+
+.search-form button {
+    background-color: transparent;
+    border: 0;
+}
+
+.search-form button {
+    box-shadow: none;
+    color: #b8b8b8;
+}
+
+.search-form button:hover {
+    background-color: transparent;
+}
+
+.Navigation a {
+    border: 1px solid #424242;
+    padding: .5rem 1rem;
+    text-decoration: none;
+    color: #424242;
+}
+
+.Navigation h4 a {
+    border: 0;
+}

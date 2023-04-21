@@ -3,6 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import validates
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy import Enum
+from sqlalchemy.ext.hybrid import hybrid_property
+from bcrypt import hashpw, gensalt
+
 
 db = SQLAlchemy()
 
@@ -14,10 +17,25 @@ class User(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     fname = db.Column(db.String)
     lname = db.Column(db.String)
-    owner = db.Column(db.Boolean, default=False)
-    email = db.Column(db.String)
+    type = db.Column(db.String, default=False)
+    email = db.Column(db.String, unique=True)
+    _password_hash = db.Column(db.String(128))
+    completed_business_form = db.Column(db.Boolean, default=False)
+
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+
+    @hybrid_property
+    def password(self):
+        return self._password_hash 
+
+    @password.setter
+    def password(self, password):
+        salt = gensalt()
+        self._password_hash = hashpw(password.encode('utf-8'), salt).decode('utf-8')
+
+    def authenticate(self, password):
+        return bcrypt.check_password_hash(self._password_hash, password)
 
     reviews = db.relationship('Review', backref='user')
     businesses = db.relationship('Business', backref='user')
@@ -27,7 +45,7 @@ class User(db.Model, SerializerMixin):
 
 
 class Review(db.Model, SerializerMixin):
-    tablename = 'reviews'
+    __tablename__ = 'reviews'
 
     id = db.Column(db.Integer, primary_key=True)
     review = db.Column(db.String)
@@ -55,7 +73,7 @@ class Business(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     business_name = db.Column(db.String)
-    buisness_nember = db.Column(db.String)
+    business_number = db.Column(db.String)
     business_image = db.Column(db.String, default="https://d2jhcfgvzjqsa8.cloudfront.net/storage/2022/04/download.png")
     business_address = db.Column(db.String)
     business_city = db.Column(db.String)
@@ -65,7 +83,7 @@ class Business(db.Model, SerializerMixin):
     'Food & Dining', 'Automotive', 'Retailer', 'Computers & Electronics', 'Entertainment', 'Health & Medicine', 'Education', 'Home & Garden', 'Legal & Financial', 'Manufacturing, Wholesale, Distribution', 'Personal Care & Services', 'Real Estate', 'Travel & Transportation', 'Other'
     ), nullable=False)
     business_description = db.Column(db.String)
-    business_owner = db.Column(db.Integer, db.ForeignKey('users.id'))
+    business_owner = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
@@ -76,5 +94,6 @@ class Business(db.Model, SerializerMixin):
 
     def __repr__(self):
         return f'Name: {self.business_name} | owner: {self.business_owner}'
+
 
 

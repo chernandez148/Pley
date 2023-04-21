@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useFormik } from 'formik';
-import { Col, Row, Container } from 'react-bootstrap';
+import { Col, Container } from 'react-bootstrap';
+import VideoContainer from '../VideoContainer/VideoContainer';
 import * as yup from 'yup';
 import './Authentication.css'
 
@@ -53,87 +54,85 @@ function Authentication({ updateUser }) {
     });
 
     return (
-        <div className='Authentication py-5'>
-            <Container >
-                <Row>
-                    <Col sm={8}></Col>
-                    <Col>
-                        <form>
-                            <h3>{signUp ? 'Sign up now!' : 'Please sign in'}</h3>
-                            {signUp && formik.errors && (
-                                <>
-                                    <label htmlFor='fname'>First Name</label>
+        <div className="Authentication">
+            <Container fluid className='p-0'>
+                <VideoContainer />
+                <Col className='left-col vh-100 d-flex flex-column position-absolute justify-content-center end-0 top-0 p-5'>
+                    <form>
+                        <h3>{signUp ? 'Sign up now!' : 'Please sign in'}</h3>
+                        {signUp && formik.errors && (
+                            <>
+                                <label htmlFor='fname'>First Name</label>
+                                <input
+                                    type='text'
+                                    id='fname'
+                                    name='fname'
+                                    onChange={formik.handleChange}
+                                    value={formik.values.fname}
+                                />
+                                <span>{formik.errors.fname}</span>
+                                <label htmlFor='lname'>Last Name</label>
+                                <input
+                                    type='text'
+                                    id='lname'
+                                    name='lname'
+                                    onChange={formik.handleChange}
+                                    value={formik.values.lname}
+                                />
+                                <span>{formik.errors.lname}</span>
+                                <label>Account type:</label>
+                                <label className='mt-0'>
                                     <input
-                                        type='text'
-                                        id='fname'
-                                        name='fname'
+                                        type='radio'
+                                        id='user'
+                                        name='type'
+                                        value='User'
                                         onChange={formik.handleChange}
-                                        value={formik.values.fname}
+                                        checked={formik.values.type === 'User'}
                                     />
-                                    <span>{formik.errors.fname}</span>
-                                    <label htmlFor='lname'>Last Name</label>
+                                    User
+                                </label>
+                                <label className='mt-0'>
                                     <input
-                                        type='text'
-                                        id='lname'
-                                        name='lname'
+                                        type='radio'
+                                        id='business'
+                                        name='type'
+                                        value='Business'
                                         onChange={formik.handleChange}
-                                        value={formik.values.lname}
+                                        checked={formik.values.type === 'Business'}
                                     />
-                                    <span>{formik.errors.lname}</span>
-                                    <label>Account type:</label>
-                                    <label className='mt-0'>
-                                        <input
-                                            type='radio'
-                                            id='user'
-                                            name='type'
-                                            value='User'
-                                            onChange={formik.handleChange}
-                                            checked={formik.values.type === 'User'}
-                                        />
-                                        User
-                                    </label>
-                                    <label className='mt-0'>
-                                        <input
-                                            type='radio'
-                                            id='business'
-                                            name='type'
-                                            value='Business'
-                                            onChange={formik.handleChange}
-                                            checked={formik.values.type === 'Business'}
-                                        />
-                                        Business
-                                    </label>
-                                    <span>{formik.errors.type}</span>
-                                </>
-                            )}
-                            <label htmlFor='email'>Email</label>
-                            <input
-                                type='text'
-                                id='email'
-                                name='email'
-                                onChange={formik.handleChange}
-                                value={formik.values.email}
-                            />
-                            <span>{formik.errors.email}</span>
-                            <label htmlFor='password'>Password</label>
-                            <input
-                                type='password'
-                                id='password'
-                                name='password'
-                                onChange={formik.handleChange}
-                                value={formik.values.password}
-                            />
-                            <span>{formik.errors.password}</span>
-                            <button type='submit' onClick={formik.handleSubmit}>
-                                {signUp ? 'Sign up now!' : 'Sign in'}
-                            </button>
-                        </form>
+                                    Business
+                                </label>
+                                <span>{formik.errors.type}</span>
+                            </>
+                        )}
+                        <label htmlFor='email'>Email</label>
+                        <input
+                            type='text'
+                            id='email'
+                            name='email'
+                            onChange={formik.handleChange}
+                            value={formik.values.email}
+                        />
+                        <span>{formik.errors.email}</span>
+                        <label htmlFor='password'>Password</label>
+                        <input
+                            type='password'
+                            id='password'
+                            name='password'
+                            onChange={formik.handleChange}
+                            value={formik.values.password}
+                        />
+                        <span>{formik.errors.password}</span>
+                        <button type='submit' onClick={formik.handleSubmit}>
+                            {signUp ? 'Sign up now!' : 'Sign in'}
+                        </button>
+                    </form>
 
-                        <h6 className='mt-3'>{signUp ? 'Already a member?' : 'Not a member?'}</h6>
+                    <h6 className='mt-3'>{signUp ? 'Already a member?' : 'Not a member?'}</h6>
 
-                        <a href='#' onClick={handleClick}>{signUp ? 'Log In!' : 'Sign Up!'}</a>
-                    </Col>
-                </Row>
+                    <a href='#' onClick={handleClick}>{signUp ? 'Log In!' : 'Sign Up!'}</a>
+                </Col>
             </Container>
         </div>
     );

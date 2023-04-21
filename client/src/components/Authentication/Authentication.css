@@ -1,3 +1,8 @@
+.Authentication {
+    position: relative;
+    z-index: 2;
+}
+
 form {
     display: flex;
     flex-direction: column;
@@ -54,4 +59,9 @@ span {
     color: rgb(255, 86, 86);
     text-align: left;
     margin-bottom: .5rem;
+}
+
+.left-col {
+    background-color: #fffffff7 !important;
+    width: 500px !important;
 }
