@@ -5,8 +5,11 @@ from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy import Enum
 from sqlalchemy.ext.hybrid import hybrid_property
 from bcrypt import hashpw, gensalt
-from flask_bcrypt import bcrypt
+from flask_bcrypt import Bcrypt
+from config import app
 
+
+bcrypt = Bcrypt(app)
 db = SQLAlchemy()
 
 # Models go here!
@@ -19,7 +22,7 @@ class User(db.Model, SerializerMixin):
     lname = db.Column(db.String)
     type = db.Column(db.String, default=False)
     email = db.Column(db.String, unique=True)
-    _password_hash = db.Column(db.String(128))
+    _password_hash = db.Column(db.String(128), nullable=False)
     completed_business_form = db.Column(db.Boolean, default=False)
 
     created_at = db.Column(db.DateTime, server_default=db.func.now())
@@ -35,7 +38,7 @@ class User(db.Model, SerializerMixin):
         self._password_hash = hashpw(password.encode('utf-8'), salt).decode('utf-8')
 
     def authenticate(self, password):
-        return bcrypt.check_password_hash(self._password_hash, password)
+        return bcrypt.check_password_hash(self._password_hash, password.encode('utf-8'))
 
     reviews = db.relationship('Review', backref='user')
     businesses = db.relationship('Business', backref='user')
@@ -51,7 +54,7 @@ class Review(db.Model, SerializerMixin):
     review = db.Column(db.String)
     rating = db.Column(db.Integer)
 
-    business_id = db.Column(db.Integer, db.ForeignKey('business.id'))
+    business_id = db.Column(db.Integer, db.ForeignKey('businesses.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
@@ -63,13 +66,13 @@ class Review(db.Model, SerializerMixin):
 
     @validates('rating')
     def validate_rating(self, key, rating):
-        if rating < 1 or rating > 5:
+        if int(rating) < 1 or int(rating) > 5:
             raise ValueError({'error': 'Rating must be between 1 and 5'})
-        return rating
+        return int(rating)
 
 
 class Business(db.Model, SerializerMixin):
-    __tablename__ = 'business'
+    __tablename__ = 'businesses'
 
     id = db.Column(db.Integer, primary_key=True)
     business_name = db.Column(db.String)

@@ -13,9 +13,9 @@ function Authentication({ updateUser }) {
     const handleClick = () => setSignUp((signUp) => !signUp);
 
     const formSchema = yup.object().shape({
-        fname: yup.string().required('Please enter your first name'),
-        lname: yup.string().required('Please enter your last name'),
-        type: yup.string().required('Please enter account type'),
+        fname: yup.string('Please enter your first name'),
+        lname: yup.string('Please enter your last name'),
+        type: yup.string('Please enter account type'),
         email: yup.string().email().required('Please enter your email'),
         password: yup.string().required('Please enter a password')
     });
@@ -25,11 +25,12 @@ function Authentication({ updateUser }) {
             fname: '',
             lname: '',
             type: '',
-            email: '',
-            password: '',
+            email: 'a@gmail.com',
+            password: '1234',
         },
         validationSchema: formSchema,
         onSubmit: (values) => {
+            console.log(values)
             fetch(signUp ? '/signup' : '/login', {
                 method: 'POST',
                 headers: {
@@ -41,9 +42,9 @@ function Authentication({ updateUser }) {
                     resp.json().then((user) => {
                         updateUser(user);
                         if (values.type === 'User') {
-                            history.push('/');
+                            history.push('/hero');
                         } else if (values.type === 'Business') {
-                            history.push('/');
+                            history.push('/business-form');
                         }
                     });
                 } else {

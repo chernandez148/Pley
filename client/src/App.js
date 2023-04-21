@@ -8,29 +8,62 @@ import BusinessDetail from './components/BuisnessForm/BusinessDetail';
 import './App.css';
 
 function App() {
+  const [users, setUsers] = useState([]);
   const [businesses, setBusinesses] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const [user, setUser] = useState(null);
-  const [hideOverflow, setHideOverflow] = useState(false)
-  console.log(hideOverflow)
+  console.log(user)
+  console.log(businesses)
+  console.log(reviews)
 
   useEffect(() => {
+    fetchUsers()
+    fetchUser()
+    fetchBusinesses()
+    fetchReviews()
+  }, [])
+
+  const fetchUsers = () => (
+    fetch('/users')
+      .then(resp => resp.json())
+      .then(setUsers)
+  )
+
+  const fetchBusinesses = () => (
     fetch('/businesses')
       .then(resp => resp.json())
-      .then(setBusinesses);
-  }, []);
+      .then(setBusinesses)
+  )
 
-  console.log(businesses)
+  const fetchReviews = () => (
+    fetch('/reviews')
+      .then(resp => resp.json())
+      .then(setReviews)
+  )
 
-  const hiddenOveflow = hideOverflow ? "overflow-y-hidden" : ""
-
+  const fetchUser = () => (
+    fetch('/authorized')
+      .then(res => {
+        if (res.ok) {
+          res.json()
+            .then(data => {
+              setUser(data)
+            })
+        } else {
+          setUser(null)
+        }
+      })
+  )
   const addBusiness = (business) => setBusinesses(current => [...current, business]);
+
+  const addReviews = (review) => setReviews(current => [...current, review])
 
   const updateUser = (user) => setUser(user);
 
   return (
-    <div className={`App vh-100 ${hiddenOveflow}`}>
+    <div className='App vh-100'>
       <BrowserRouter>
-        <Navigation setHideOverflow={setHideOverflow} />
+        <Navigation user={user} updateUser={updateUser} />
         <Switch>
           <Route exact path="/Authentication">
             <Authentication updateUser={updateUser} />
@@ -39,10 +72,10 @@ function App() {
             <BusinessForm addBusiness={addBusiness} />
           </Route>
           <Route exact path='/hero'>
-            <Hero businesses={businesses}/>
+            <Hero businesses={businesses} />
           </Route>
           <Route path='/businesses/:id'>
-            <BusinessDetail />
+            <BusinessDetail users={users} addReviews={addReviews} user={user} />
           </Route>
         </Switch>
       </BrowserRouter>
