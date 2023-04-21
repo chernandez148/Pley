@@ -18,6 +18,8 @@ function App() {
       .then(setBusinesses);
   }, []);
 
+  console.log(businesses)
+
   const hiddenOveflow = hideOverflow ? "overflow-y-hidden" : ""
 
   const addBusiness = (business) => setBusinesses(current => [...current, business]);
@@ -36,7 +38,7 @@ function App() {
             <BusinessForm addBusiness={addBusiness} />
           </Route>
           <Route exact path='/hero'>
-            <Hero />
+            <Hero businesses={businesses}/>
           </Route>
         </Switch>
       </BrowserRouter>
