@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Route, Switch, BrowserRouter } from 'react-router-dom';
 import Hero from './components/Hero/Hero';
 import Navigation from './components/Navigation/Navigation';
@@ -6,12 +7,16 @@ import Authentication from './components/Authentication/Authentication';
 import BusinessForm from './components/BuisnessForm/BusinessForm';
 import BusinessDetail from './components/BuisnessForm/BusinessDetail';
 import './App.css';
+import BusinessFormEdit from './components/BuisnessForm/BusinessFormEdit';
 
 function App() {
   const [users, setUsers] = useState([]);
   const [businesses, setBusinesses] = useState([]);
+  const [businessEdit, setBusinessEdit] = useState(false)
   const [reviews, setReviews] = useState([]);
   const [user, setUser] = useState(null);
+  const history = useHistory();
+
   console.log(user)
   console.log(businesses)
   console.log(reviews)
@@ -58,6 +63,15 @@ function App() {
 
   const deleteReview = (delete_review) => setReviews(reviews => reviews.filter((review) => review.id) !== delete_review.id)
 
+  const updateBusiness = (updated_business) => setBusinesses(businesses => businesses.map(business => business.id == updated_business.id ? updated_business : business))
+
+  function handleEdit(business, history) {
+    setBusinessEdit(!businessEdit)
+    console.log(history)
+    history.push(`/businesses/edit/${business}`);
+  };
+
+
   const addBusiness = (business) => setBusinesses(current => [...current, business]);
 
   const addReviews = (review) => setReviews(current => [...current, review])
@@ -78,8 +92,20 @@ function App() {
           <Route exact path='/hero'>
             <Hero businesses={businesses} />
           </Route>
+          <Route path='/businesses/edit/:id'>
+            <BusinessFormEdit businessEdit={businessEdit} updateBusiness={updateBusiness} />
+          </Route>
           <Route path='/businesses/:id'>
-            <BusinessDetail deleteReview={deleteReview} reviews={reviews} users={users} addReviews={addReviews} user={user} />
+            <BusinessDetail
+              handleEdit={handleEdit}
+              businesses={businesses}
+              deleteReview={deleteReview}
+              reviews={reviews}
+              users={users}
+              addReviews={addReviews}
+              user={user}
+              history={history} // pass history object as a prop
+            />
           </Route>
         </Switch>
       </BrowserRouter>

@@ -1,12 +1,12 @@
-import { Col, Row, Container } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
 import { useFormik } from 'formik'
+import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom';
+import { Col, Row, Container } from 'react-bootstrap';
 import * as yup from 'yup'
 
-function BusinessForm({ addBusiness }) {
-
+function BusinessFormEdit({ updateBusiness }) {
+    const [errors, setErrors] = useState(false)
     const history = useHistory()
-
     const formSchema = yup.object().shape({
         business_name: yup.string().required("Please enter business name."),
         business_number: yup.string().matches(/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/, "Please enter a valid phone number.").required(),
@@ -17,7 +17,6 @@ function BusinessForm({ addBusiness }) {
         business_category: yup.string().required("Please select a category."),
         business_description: yup.string().required("Please enter description")
     })
-
     const formik = useFormik({
         initialValues: {
             business_name: '',
@@ -27,30 +26,36 @@ function BusinessForm({ addBusiness }) {
             business_state: '',
             business_zipcode: '',
             business_category: '',
-            business_description: '',
+            business_description: ''
         },
         validationSchema: formSchema,
-        onSubmit: (values) => {
-            fetch('/businesses', {
-                method: 'POST',
+        onSubmit: (values => {
+            fetch(`/businesses/${id}`, {
+                method: "PATCH",
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(values)
             })
-                .then(resp => resp.json())
-                .then(business => {
-                    addBusiness(business)
-                    history.push('/')
+                .then(res => {
+                    if (res.ok) {
+                        res.json().then(business => {
+                            updateBusiness(business)
+                            console.log(business.id, "RIGHT HERE")
+                            history.push(`/businesses/${business.id}`)
+                        })
+                    } else {
+                        res.json().then(errors => setErrors(errors.message))
+                    }
                 })
-        }
+        })
     })
-
     return (
-        <div className='BusinessForm'>
+        <div className='BusinessForm' >
             <Container>
                 <Row className='justify-content-center py-5'>
                     <Col sm={4}>
+                        {errors && <h2>{errors}</h2>}
                         <form className='text-start'>
                             <label>Business Name:</label>
                             <input type='text' name='business_name' value={formik.values.business_name} onChange={formik.handleChange} />
@@ -95,8 +100,8 @@ function BusinessForm({ addBusiness }) {
                     </Col>
                 </Row>
             </Container>
-        </div>
+        </div >
     )
 }
 
-export default BusinessForm
+export default BusinessFormEdit

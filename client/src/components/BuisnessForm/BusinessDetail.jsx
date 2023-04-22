@@ -1,14 +1,18 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import AddReview from './AddReview';
 import Review from './Review';
 
-function BusinessDetail({ user, addReviews, users, deleteReviews }) {
+function BusinessDetail({ user, addReviews, users, deleteReviews, handleEdit }) {
     const [business, setBusiness] = useState({ reviews: [] });
     const [error, setError] = useState(null);
     const [userReviewID, setUserReviewID] = useState();
     const params = useParams();
+    const history = useHistory()
+
+    console.log(users)
+
 
     useEffect(() => {
         getBusinessByID();
@@ -42,6 +46,7 @@ function BusinessDetail({ user, addReviews, users, deleteReviews }) {
                     <h3>{business.business_address}</h3>
                     <h3>{business.business_number}</h3>
                     <h5>{business.business_description}</h5>
+                    <Button onClick={() => handleEdit(business.id, history)}>Edit Business</Button>
                     <h6>
                         {business.reviews.map(review => (
                             <Review key={review.id} review={review} deleteReviews={deleteReviews} />
